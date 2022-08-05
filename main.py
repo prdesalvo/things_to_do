@@ -10,40 +10,41 @@ from replit import db
 db['first_entry'] = 'hello'
 
 app = Flask(  # Create a flask app
-	__name__,
-	template_folder='templates',  # Name of html file folder
-	static_folder='static'  # Name of directory for static files
+    __name__,
+    template_folder='templates',  # Name of html file folder
+    static_folder='static'  # Name of directory for static files
 )
 app.config["SECRET_KEY"] = "mysecret"
 
+
 class MyForm(FlaskForm):
-    place = StringField('Find things to do in...', validators=[DataRequired()])
+    place = StringField('Find things to do in...',
+                        validators=[DataRequired()],
+                        render_kw={"placeholder": "Minneapolis"})
 
 
 @app.route('/', methods=['GET', 'POST'])
 def home_page():
-  form = MyForm()
-  if form.validate_on_submit():
-    place_entry = form.place.data
-    # db['place'] = my_data
-    # db['time'] = dt.datetime.now()
-    print(place_entry)
+    form = MyForm()
+    if form.validate_on_submit():
+        place_entry = form.place.data
+        # db['place'] = my_data
+        # db['time'] = dt.datetime.now()
+        print(place_entry)
 
-    places_lst = the_knot_places(place_entry)
-    
-    return render_template(
-      'success.html', 
-      form=form, 
-      place_text = place_entry, 
-      places_lst = places_lst
-    )
-  
-  return render_template('index.html', form=form)
+        places_lst = the_knot_places(place_entry)
+
+        return render_template('success.html',
+                               form=form,
+                               place_text=place_entry,
+                               places_lst=places_lst)
+
+    return render_template('index.html', form=form)
+
 
 @app.route('/about.html')  # What happens when the user visits the site
 def about_page():
-	return render_template(
-		'about.html',
-	)
+    return render_template('about.html', )
+
 
 app.run(host='0.0.0.0', port=8080, debug=True)
