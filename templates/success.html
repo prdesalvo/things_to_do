@@ -1,0 +1,27 @@
+{% extends "base.html"  %} 
+{% set active_page = "home" %}
+{% block content %}
+
+<br>
+<h1>Things to do in {{ place_text }}</h1>
+<br>
+<!-- <div class="row"> -->
+<div class="card-columns">
+  {%for heading, site, place, description in places_lst %}
+<!-- <div class="col-md-4 pb-3"> -->
+  <div class="card">
+<!--     <img class="card-img-top" src="..." alt="Card image cap"> -->
+    <div class="card-body">
+      <h5 class="card-title">{{heading}}</h5>
+<!--       Allows for br to show up as line breaks in string -->
+      {% autoescape false %} 
+      <p class="card-text">{{description}}</p>
+      {% endautoescape %}
+      <a href="{{site}}" class="btn btn-light" target=”_blank”>Wedding Website</a>
+    </div>
+  </div>
+  {%endfor%}
+</div>
+
+
+{% endblock %}
