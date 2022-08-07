@@ -10,10 +10,8 @@ import pandas as pd
 def the_knot_places(city):
     knot_lst = []
     headings = []  #collect the headings
-    places = pd.DataFrame(columns=[
-        'heading', 'description', 'site', 'place', 'couples_names',
-        'wedding_date'
-    ])
+    place_images = []
+    places = pd.DataFrame(columns=['heading', 'description', 'place_image', 'site', 'place', 'couples_names', 'wedding_date'])
 
     query = f"{city} wedding website things to do the knot"
 
@@ -31,47 +29,43 @@ def the_knot_places(city):
 
             #Get the couple names
             if soup.find("h1", {"data-testid": "header-couple-names"}):
-                couples_names = soup.find("h1", {
-                    "data-testid": "header-couple-names"
-                }).text
+                couples_names = soup.find("h1", {"data-testid": "header-couple-names"}).text
             else:
                 pass
 
             #Get the wedding date
-            if soup.find("div",
-                         {"data-testid": "header-wedding-date-location"}):
-                wedding_date = soup.find(
-                    "div", {
-                        "data-testid": "header-wedding-date-location"
-                    }).text
+            if soup.find("div", {"data-testid": "header-wedding-date-location"}):
+                wedding_date = soup.find("div", {"data-testid": "header-wedding-date-location"}).text
             else:
                 pass
 
             #Grab the headings and places
-            h_and_p_tags = soup.find_all(['h3', 'h4', 'h5', 'h6', 'p'])
+            elements = soup.find_all(['h3', 'h4', 'h5', 'h6', 'p', 'img'])
 
-            if 'p' in [
-                    tag.name for tag in h_and_p_tags
-            ]:  #check if there are paragraphs because it means the person actually spent time making the list
-                for i in h_and_p_tags:
+            if 'p' in [tag.name for tag in elements]:  #check if there are paragraphs because it means the person actually spent time making the list
+                for i in elements:
                     if 'h' in i.name:
                         headings.append(i.text)
+                        place_images.append('No image')
                         print(i.text)
+                    
+                    elif i.has_attr("data-nimg"):
+                      place_images[-1] = i['src']
+
                     elif 'p' in i.name and headings:
-                        places.loc[len(places)] = [
-                            headings[-1], i.text, poi_link, city,
-                            couples_names, wedding_date
-                        ]
-                    else:
+                        description = i.text
+                        heading_for_place = headings[-1]
+                        image_for_place = place_images[-1]
+                        places.loc[len(places)] = [heading_for_place, description, image_for_place, poi_link, city, couples_names, wedding_date]
+                    else: 
                         pass
             else:
                 pass
         else:
             pass
-
-    results = places.groupby([
-        'heading', 'site', 'place', 'couples_names', 'wedding_date'
-    ])['description'].apply('<br>'.join).reset_index().sort_values(by=['site'])
+    
+    results = places.groupby(['heading', 'site', 'place', 'place_image', 'couples_names', 'wedding_date'])['description'].apply('<br>'.join).reset_index().sort_values(by=['site'])
     results_lst = results.values.tolist()
 
     return results_lst
+    # return results

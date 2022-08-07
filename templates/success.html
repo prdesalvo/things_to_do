@@ -9,9 +9,11 @@
 <p>No upcoming weddings found in that area... Check the spelling or try a different place</p>
 {% else %}
 <div class="card-columns">
-  {%for heading, site, place, couples_names, wedding_date, description in places_lst %}
+  {%for heading, site, place, place_image, couples_names, wedding_date, description in places_lst %}
   <div class="card">
-<!--     <img class="card-img-top" src="..." alt="Card image cap"> -->
+    {%if place_image != 'No image'%}
+    <img class="card-img-top" src="{{place_image}}" alt="Card image cap">
+    {% endif %}
     <div class="card-body">
       <h5 class="card-title">{{heading}}</h5>
       {% autoescape false %} 
