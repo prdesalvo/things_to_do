@@ -8,10 +8,12 @@ import pandas as pd
 
 
 def the_knot_places(city):
-
     knot_lst = []
     headings = []  #collect the headings
-    places = pd.DataFrame(columns=['heading', 'description', 'site', 'place'])
+    places = pd.DataFrame(columns=[
+        'heading', 'description', 'site', 'place', 'couples_names',
+        'wedding_date'
+    ])
 
     query = f"{city} wedding website things to do the knot"
 
@@ -27,6 +29,24 @@ def the_knot_places(city):
             page = requests.get(poi_link, headers=header)
             soup = BeautifulSoup(page.content, "html.parser")
 
+            #Get the couple names
+            if soup.find("h1", {"data-testid": "header-couple-names"}):
+                couples_names = soup.find("h1", {
+                    "data-testid": "header-couple-names"
+                }).text
+            else:
+                pass
+
+            #Get the wedding date
+            if soup.find("div",
+                         {"data-testid": "header-wedding-date-location"}):
+                wedding_date = soup.find(
+                    "div", {
+                        "data-testid": "header-wedding-date-location"
+                    }).text
+            else:
+                pass
+
             #Grab the headings and places
             h_and_p_tags = soup.find_all(['h3', 'h4', 'h5', 'h6', 'p'])
 
@@ -39,7 +59,8 @@ def the_knot_places(city):
                         print(i.text)
                     elif 'p' in i.name and headings:
                         places.loc[len(places)] = [
-                            headings[-1], i.text, poi_link, city
+                            headings[-1], i.text, poi_link, city,
+                            couples_names, wedding_date
                         ]
                     else:
                         pass
@@ -49,7 +70,7 @@ def the_knot_places(city):
             pass
 
     results = places.groupby([
-        'heading', 'site', 'place'
+        'heading', 'site', 'place', 'couples_names', 'wedding_date'
     ])['description'].apply('<br>'.join).reset_index().sort_values(by=['site'])
     results_lst = results.values.tolist()
 

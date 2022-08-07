@@ -5,23 +5,25 @@
 <br>
 <h1>Things to do in {{ place_text }}</h1>
 <br>
-<!-- <div class="row"> -->
+{% if places_lst == []%}
+<p>No upcoming weddings found in that area... Check the spelling or try a different place</p>
+{% else %}
 <div class="card-columns">
-  {%for heading, site, place, description in places_lst %}
-<!-- <div class="col-md-4 pb-3"> -->
+  {%for heading, site, place, couples_names, wedding_date, description in places_lst %}
   <div class="card">
 <!--     <img class="card-img-top" src="..." alt="Card image cap"> -->
     <div class="card-body">
       <h5 class="card-title">{{heading}}</h5>
-<!--       Allows for br to show up as line breaks in string -->
       {% autoescape false %} 
       <p class="card-text">{{description}}</p>
       {% endautoescape %}
-      <a href="{{site}}" class="btn btn-light" target=”_blank”>Wedding Website</a>
+      <p class="card-text"><small class="text-muted">Recommendation by {{couples_names}}</small></p>
+      <p class="card-text"><small class="text-muted">{{wedding_date}}</small></p>
+      <a href="{{site}}" class="btn btn-light" target=”_blank”>View Wedding Website</a>
     </div>
   </div>
   {%endfor%}
 </div>
-
+{% endif %}
 
 {% endblock %}
