@@ -44,7 +44,7 @@ def home_page():
 
 @app.route('/about.html')  # What happens when the user visits the site
 def about_page():
-    return render_template('about.html', )
+    return render_template('about.html')
 
 
-app.run(host='0.0.0.0', port=8080, debug=True)
+app.run(host='0.0.0.0', port=8080, debug=False)
