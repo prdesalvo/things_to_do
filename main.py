@@ -7,8 +7,6 @@ from helper import the_knot_places
 
 from replit import db
 
-db['first_entry'] = 'hello'
-
 app = Flask(  # Create a flask app
     __name__,
     template_folder='templates',  # Name of html file folder
@@ -28,8 +26,7 @@ def home_page():
     form = MyForm()
     if form.validate_on_submit():
         place_entry = form.place.data
-        # db['place'] = my_data
-        # db['time'] = dt.datetime.now()
+        # db['place'] = {place_entry: dt.datetime.now()}
         print(place_entry)
 
         places_lst = the_knot_places(place_entry)

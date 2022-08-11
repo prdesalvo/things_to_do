@@ -1,4 +1,4 @@
-$("button").click(function(){
+$("form").submit(function(){
   
   $("#find_places").addClass('d-none');
   $("#spinner").removeClass("d-none");
