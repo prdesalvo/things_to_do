@@ -1,3 +1,4 @@
+import os
 from flask import Flask, render_template
 from flask_wtf import FlaskForm
 from wtforms import StringField
@@ -12,7 +13,7 @@ app = Flask(  # Create a flask app
     template_folder='templates',  # Name of html file folder
     static_folder='static'  # Name of directory for static files
 )
-app.config["SECRET_KEY"] = "mysecret"
+app.config["SECRET_KEY"] = os.environ['secret']
 
 
 class MyForm(FlaskForm):
@@ -26,10 +27,10 @@ def home_page():
     form = MyForm()
     if form.validate_on_submit():
         place_entry = form.place.data
-        # db['place'] = {place_entry: dt.datetime.now()}
         print(place_entry)
 
         places_lst = the_knot_places(place_entry)
+        db[place_entry] = len(places_lst)
 
         return render_template('success.html',
                                form=form,
