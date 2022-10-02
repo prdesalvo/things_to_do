@@ -1,4 +1,4 @@
-$("form").submit(function(){
+$("#things-do-to-form").submit(function(){
   $("#find_places").prop("disabled",true).text(' Loading...').prepend('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>');
 
   $("#first_p").delay(1000).slideDown('slow');
