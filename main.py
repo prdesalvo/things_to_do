@@ -15,6 +15,12 @@ app = Flask(  # Create a flask app
 )
 app.config["SECRET_KEY"] = os.environ['secret']
 
+app.config.update(
+    SESSION_COOKIE_SECURE=True,
+    SESSION_COOKIE_HTTPONLY=True,
+    SESSION_COOKIE_SAMESITE='None',
+)
+
 
 class MyForm(FlaskForm):
     place = StringField('Find things to do in...',
@@ -32,10 +38,16 @@ def home_page():
         places_lst = the_knot_places(place_entry)
         db[place_entry] = len(places_lst)
 
-        return render_template('success.html',
-                               form=form,
-                               place_text=place_entry,
-                               places_lst=places_lst)
+        response = render_template('success.html',
+                                   form=form,
+                                   place_text=place_entry,
+                                   places_lst=places_lst)
+        # response.set_cookie('username',
+        #                     'flask',
+        #                     secure=True,
+        #                     httponly=True,
+        #                     samesite='Lax')
+        return response
 
     return render_template('index.html', form=form)
 
